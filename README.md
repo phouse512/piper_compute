@@ -11,6 +11,20 @@ Dependencies:
 - packer: `$ brew install packer`
 
 
+Setting up AWS X509 certificates for creating custom ami images:
+
+```
+$ openssl genrsa 2048 > private-key.pem
+$ openssl req -new -x509 -nodes -sha256 -days 365 -key private-key.pem -outform
+PEM -out certificate.pem
+
+# upload to aws
+$ aws iam upload-signing-certificate --username piper_compute_dev --certificate-body
+file://certificate.pem
+```
+
+
+
 TODOS:
 
 [ ] - set up basic packer image that can be started / stopped
