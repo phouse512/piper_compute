@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Add user phil to ubuntu
+      user:
+        name: phil
+        state: present
+        password: 12IlAPpm3NJew
+    - apt: "name={{ item }} state=installed"
+      with_items:
+        - git
+        - wget
+        - curl
+        - vim
+    - name: Set authorized key
+      authorized_key:
+        user: ubuntu
+        state: present
+        key: "{{ lookup('file', item) }}"
+      with_fileglob: files/*.pub
+
