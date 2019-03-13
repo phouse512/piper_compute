@@ -62,4 +62,11 @@
         dest: /home/phil/.ssh/id_rsa
         mode: 0600
         owner: phil
-
+    - name: Create directory for vundle
+      file:
+        path: /home/phil/.vim/bundle
+        state: directory
+    - name: git clone vundle
+      git:
+        repo: https://github.com/VundleVim/Vundle.vim.git
+        dest: /home/phil/.vim/bundle/Vundle.vim
