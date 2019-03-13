@@ -2,6 +2,12 @@
     "variables": {},
     "provisioners": [
         {
+            "type": "file",
+            "source": "ansible",
+            "destination": "/tmp/ansible",
+            "direction": "upload"
+        },
+        {
             "type": "shell",
             "script": "scripts/ansible.sh"
         },

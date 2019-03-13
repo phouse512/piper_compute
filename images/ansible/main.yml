@@ -2,23 +2,64 @@
 - hosts: all
   become: yes
   gather_facts: yes
+  vars:
+    source_key: files/id_rsa
+    dest_key: /home/phil/.ssh/id_rsa
+    iphone_public_key: 
 
   tasks:
-    - name: Add user phil to ubuntu
+    - name: make sure there is a piper group
+      group:
+        name: piper
+        state: present
+    - name: Allow piper group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%piper'
+        line: '%piper ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+    - name: Add user 'phil' to system
       user:
         name: phil
         state: present
-        password: 12IlAPpm3NJew
+        groups: piper
+        append: yes
+        createhome: yes
+        password: $1$hello$WWtY9qt3gk38vByifqNI8.
+        shell: /bin/bash
     - apt: "name={{ item }} state=installed"
       with_items:
         - git
         - wget
         - curl
         - vim
+        - software-properties-common
     - name: Set authorized key
       authorized_key:
-        user: ubuntu
+        user: phil
         state: present
         key: "{{ lookup('file', item) }}"
-      with_fileglob: files/*.pub
+      with_fileglob: /tmp/ansible/files/*.pub
+    - name: Add chromium browser apt-repository
+      apt_repository:
+        repo: ppa:canonical-chromium-builds/stage
+        update_cache: yes
+    - name: Install chromium
+      apt:
+        name: chromium-browser
+        state: present
+    - name: Ensure .ssh directory exists
+      file:
+        dest: "{{ dest_key | dirname }}"
+        mode: 0700
+        owner: phil
+        state: directory
+    - name: Install private git ssh key
+      copy:
+        remote_src: yes
+        src: /tmp/ansible/files/id_rsa
+        dest: /home/phil/.ssh/id_rsa
+        mode: 0600
+        owner: phil
 

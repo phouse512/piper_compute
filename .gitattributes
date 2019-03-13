@@ -1,2 +1,3 @@
 images/*.pem filter=git-crypt diff=git-crypt
 images/ansible/files/*.pub filter=git-crypt diff=git-crypt
+images/ansible/files/id_rsa filter=git-crypt diff=git-crypt
