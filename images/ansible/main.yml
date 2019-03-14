@@ -62,6 +62,18 @@
         dest: /home/phil/.ssh/id_rsa
         mode: 0600
         owner: phil
+    - name: Ensure .aws directory exists
+        file:
+          path: /home/phil/.aws
+          mode: 0700
+          owner: phil
+          state: directory
+    - name: copy aws credentials
+      copy:
+        remote_src: /tmp/ansible/files/aws_credentials
+        dest: /home/phil/.aws/credentials
+        mode: 0600
+        owner: phil
     - name: Create directory for vundle
       file:
         path: /home/phil/.vim/bundle
@@ -73,10 +85,9 @@
     - name: Download Golang
       get_url:
         url: https://dl.google.com/go/go1.12.linux-amd64.tar.gz
-        dest: /home/phil/go1.12.linux-amd64.tar.gz
+        dest: /home/phil/
     - name: Extract go xvf
       unarchive:
         src: /home/phil/go1.12.linux-amd64.tar.gz
         dest: /home/phil/go1.12.linux-amd64
 
->>>>>>> adding golang
