@@ -70,3 +70,13 @@
       git:
         repo: https://github.com/VundleVim/Vundle.vim.git
         dest: /home/phil/.vim/bundle/Vundle.vim
+    - name: Download Golang
+      get_url:
+        url: https://dl.google.com/go/go1.12.linux-amd64.tar.gz
+        dest: /home/phil/go1.12.linux-amd64.tar.gz
+    - name: Extract go xvf
+      unarchive:
+        src: /home/phil/go1.12.linux-amd64.tar.gz
+        dest: /home/phil/go1.12.linux-amd64
+
+>>>>>>> adding golang
