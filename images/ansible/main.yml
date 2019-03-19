@@ -45,10 +45,6 @@
       apt_repository:
         repo: ppa:canonical-chromium-builds/stage
         update_cache: yes
-    - name: Install chromium
-      apt:
-        name: chromium-browser
-        state: present
     - name: Ensure .ssh directory exists
       file:
         dest: "{{ dest_key | dirname }}"
@@ -63,14 +59,15 @@
         mode: 0600
         owner: phil
     - name: Ensure .aws directory exists
-        file:
-          path: /home/phil/.aws
-          mode: 0700
-          owner: phil
-          state: directory
+      file:
+        path: /home/phil/.aws
+        mode: 0700
+        owner: phil
+        state: directory
     - name: copy aws credentials
       copy:
-        remote_src: /tmp/ansible/files/aws_credentials
+        src: /tmp/ansible/files/aws_credentials
+        remote_src: yes
         dest: /home/phil/.aws/credentials
         mode: 0600
         owner: phil
@@ -87,7 +84,13 @@
         url: https://dl.google.com/go/go1.12.linux-amd64.tar.gz
         dest: /home/phil/
     - name: Extract go xvf
-      unarchive:
-        src: /home/phil/go1.12.linux-amd64.tar.gz
-        dest: /home/phil/go1.12.linux-amd64
+      command: tar xvf /home/phil/go1.12.linux-amd64.tar.gz -C /home/phil/
+    - name: Chown go as root
+      command: chown -R root:root /home/phil/go
+    - name: Move go to usr local
+      command: mv /home/phil/go /usr/local
+    - name: Install chromium
+      apt:
+        name: chromium-browser
+        state: present
 
