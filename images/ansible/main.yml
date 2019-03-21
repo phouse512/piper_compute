@@ -93,4 +93,21 @@
       apt:
         name: chromium-browser
         state: present
+    - name: Clone the circlefiles
+      git:
+        repo: https://github.com/phouse512/circlefiles.git
+        dest: /home/phil/circlefiles
+    - name: setup go directories
+      file:
+        path: /home/phil/work/src/github.com/phouse512
+        mode: 0700
+        owner: phil
+        state: directory
+    - name: Clone nba video
+      git:
+        repo: ssh://git@github.com/phouse512/nba_video.git
+        dest: /home/phil/work/src/github.com/phouse512/nba_video
+        key_file: /home/phil/.ssh/id_rsa
+        accept_hostkey: yes
+        force: yes
 
